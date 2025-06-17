@@ -1,15 +1,16 @@
-// App.tsx
+// // App.tsx
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import { AlarmProvider } from './context/AlarmContext';
 
 // Screens
-import OnboardingScreen from './assets/components/OnboardingScreen/OnboardingScreen';
-import HomeScreen from './assets/components/HomeScreen/HomeScreen';
-import AlarmSetupScreen from './assets/components/AlarmSetupScreen/AlarmSetupScreen';
-import SuccessScreen from './assets/components/SuccessScreen/SuccessScreen';
-import ActiveAlarmScreen from './assets/components/ActiveAlarmScreen/ActiveAlarmScreen';
-import BarcodeScanner from './assets/components/BarcodeScanner/BarcodeScanner';
+import OnboardingScreen from './src/components/OnboardingScreen/OnboardingScreen';
+import HomeScreen from './src/components/HomeScreen/HomeScreen';
+import AlarmSetupScreen from './src/components/AlarmSetupScreen/AlarmSetupScreen';
+import SuccessScreen from './src/components/SuccessScreen/SuccessScreen';
+import ActiveAlarmScreen from './src/components/ActiveAlarmScreen/ActiveAlarmScreen';
+import BarcodeScanner from './src/components/BarcodeScanner/BarcodeScanner';
 
 export type RootStackParamList = {
   Onboarding: undefined;
@@ -25,6 +26,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 function App(): React.JSX.Element {
   return (
     <NavigationContainer>
+      <AlarmProvider>
       <Stack.Navigator initialRouteName="Home">
 
       {/* <Stack.Navigator initialRouteName="Onboarding"> */}
@@ -35,6 +37,7 @@ function App(): React.JSX.Element {
         <Stack.Screen name="ActiveAlarm" component={ActiveAlarmScreen} options={{ headerShown: false }} />
         <Stack.Screen name="BarcodeScanner" component={BarcodeScanner} options={{ title: 'Scan Barcode' }} />
       </Stack.Navigator>
+      </AlarmProvider>
     </NavigationContainer>
   );
 }
