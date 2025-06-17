@@ -62,7 +62,7 @@ export default function HomeScreen() {
       key={item.id}
       renderRightActions={() => renderRightActions(item.id)}
       overshootRight={false}
-    >
+    ><TouchableOpacity onPress={() => navigation.navigate('EditAlarm', { id: item.id })}>
       <View style={styles.alarmCardRow}>
         <View style={styles.alarmCardContent}>
           <Text style={styles.alarmName}>{item.barcode.name}</Text>
@@ -75,6 +75,7 @@ export default function HomeScreen() {
           />
         </View>
       </View>
+      </TouchableOpacity>
     </Swipeable>
               );
             })}

@@ -10,6 +10,7 @@ type AlarmContextType = {
   addBarcode: (barcode: Barcode) => void;
   toggleAlarm: (id: string) => void;
   deleteAlarm: (id: string) => void; 
+  updateAlarm: (alarm: Alarm) => void;
 };
 
 
@@ -50,9 +51,18 @@ const deleteAlarm = (id: string) => {
   setAlarms((prev) => prev.filter((alarm) => alarm.id !== id));
 };
 
+const updateAlarm = (updatedAlarm: Alarm) => {
+  setAlarms((prevAlarms) =>
+    prevAlarms.map((alarm) =>
+      alarm.id === updatedAlarm.id ? updatedAlarm : alarm
+    )
+  );
+};
+
+
 
   return (
-    <AlarmContext.Provider value={{ alarms, barcodes, addAlarm, toggleAlarm, deleteAlarm, addBarcode }}>
+    <AlarmContext.Provider value={{ alarms, barcodes, addAlarm, toggleAlarm, deleteAlarm, addBarcode, updateAlarm }}>
       {children}
     </AlarmContext.Provider>
   );

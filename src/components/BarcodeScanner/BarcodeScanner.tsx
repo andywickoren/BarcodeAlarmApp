@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import styles from './BarcodeScanner.styles';
+import { useRoute } from '@react-navigation/native';
 
 import {
   View,
@@ -14,6 +15,8 @@ import { useNavigation } from '@react-navigation/native';
 import uuid from 'react-native-uuid';
 
 export default function BarcodeScanner() {
+  const route = useRoute();
+  const onBarcodeScanned = (route.params as any)?.onBarcodeScanned;
   const [scanned, setScanned] = useState(false);
   const [barcodeName, setBarcodeName] = useState('');
   const { addBarcode } = useAlarmContext();
@@ -24,10 +27,10 @@ export default function BarcodeScanner() {
   };
 
   const handleSave = () => {
-    if (!barcodeName.trim()) {
-      Alert.alert('Please enter a name');
-      return;
-    }
+  if (!barcodeName.trim()) {
+    Alert.alert('Please enter a name');
+    return;
+  }
 
     const newBarcode = {
       name: barcodeName.trim(),
@@ -35,6 +38,9 @@ export default function BarcodeScanner() {
     };
 
     addBarcode(newBarcode);
+    if (typeof onBarcodeScanned === 'function') {
+    onBarcodeScanned(newBarcode); 
+  }
     Alert.alert('Barcode saved!');
     navigation.goBack();
   };

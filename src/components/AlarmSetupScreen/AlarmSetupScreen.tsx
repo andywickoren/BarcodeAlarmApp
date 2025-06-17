@@ -14,10 +14,14 @@ import uuid from 'react-native-uuid';
 import styles from './AlarmSetupScreen.styles';
 import { useAlarmContext } from '../../../context/AlarmContext';
 import { useNavigation } from '@react-navigation/native';
+import { RootStackParamList } from '../../../App';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+
 
 export default function AlarmSetupScreen() {
   const { addAlarm, barcodes } = useAlarmContext();
-  const navigation = useNavigation();
+  const navigation = useNavigation<NativeStackNavigationProp<RootStackParamList>>();
+
 
   const [alarmTime, setAlarmTime] = useState<Date>(new Date());
   const [selectedBarcode, setSelectedBarcode] = useState<null | {
@@ -53,9 +57,16 @@ const handleSaveAlarm = () => {
   }, 100);
 };
 
-  const handleScanNewBarcode = () => {
-    navigation.navigate('BarcodeScanner' as never);
-  };
+ const handleScanNewBarcode = () => {
+navigation.navigate('BarcodeScanner', {
+  onBarcodeScanned: (barcode: { name: string; code: string }) => {
+    setSelectedBarcode(barcode);
+  },
+});
+
+
+};
+
 
   return (
     <KeyboardAvoidingView
