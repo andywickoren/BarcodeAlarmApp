@@ -3,6 +3,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import { AlarmProvider } from './context/AlarmContext';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 // Screens
 import OnboardingScreen from './src/components/OnboardingScreen/OnboardingScreen';
@@ -25,6 +26,7 @@ const Stack = createNativeStackNavigator<RootStackParamList>();
 
 function App(): React.JSX.Element {
   return (
+    <GestureHandlerRootView style={{ flex: 1 }}>
     <NavigationContainer>
       <AlarmProvider>
       <Stack.Navigator initialRouteName="Home">
@@ -39,6 +41,7 @@ function App(): React.JSX.Element {
       </Stack.Navigator>
       </AlarmProvider>
     </NavigationContainer>
+    </GestureHandlerRootView>
   );
 }
 

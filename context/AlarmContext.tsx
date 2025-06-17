@@ -1,14 +1,18 @@
 import React, { createContext, useContext, useState, ReactNode } from 'react';
 
 export type Barcode = { code: string; name: string };
-export type Alarm = { id: string; time: Date; barcode: Barcode };
+export type Alarm = { id: string; time: Date; barcode: Barcode; enabled: boolean; };
 
 type AlarmContextType = {
   alarms: Alarm[];
   barcodes: Barcode[];
   addAlarm: (alarm: Alarm) => void;
   addBarcode: (barcode: Barcode) => void;
+  toggleAlarm: (id: string) => void;
+  deleteAlarm: (id: string) => void; 
 };
+
+
 
 const AlarmContext = createContext<AlarmContextType | undefined>(undefined);
 
@@ -23,7 +27,8 @@ export const AlarmProvider = ({ children }: { children: ReactNode }) => {
   const [barcodes, setBarcodes] = useState<Barcode[]>([]);
 
   const addAlarm = (alarm: Alarm) => {
-    setAlarms(prev => [...prev, alarm]);
+    const newAlarm = { ...alarm, enabled: true };
+    setAlarms(prev => [...prev, newAlarm]);
   };
 
   const addBarcode = (barcode: Barcode) => {
@@ -33,8 +38,21 @@ export const AlarmProvider = ({ children }: { children: ReactNode }) => {
     });
   };
 
+  const toggleAlarm = (id: string) => {
+  setAlarms((prevAlarms) =>
+    prevAlarms.map((alarm) =>
+      alarm.id === id ? { ...alarm, enabled: !alarm.enabled } : alarm
+    )
+  );
+};
+
+const deleteAlarm = (id: string) => {
+  setAlarms((prev) => prev.filter((alarm) => alarm.id !== id));
+};
+
+
   return (
-    <AlarmContext.Provider value={{ alarms, barcodes, addAlarm, addBarcode }}>
+    <AlarmContext.Provider value={{ alarms, barcodes, addAlarm, toggleAlarm, deleteAlarm, addBarcode }}>
       {children}
     </AlarmContext.Provider>
   );

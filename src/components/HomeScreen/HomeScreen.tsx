@@ -2,15 +2,17 @@ import React from 'react';
 import {
   View,
   Text,
-  StyleSheet,
-  Button,
-  FlatList,
+  ScrollView,
+  Switch,
   TouchableOpacity,
+  Animated,
 } from 'react-native';
-import { NativeStackNavigationProp } from '@react-navigation/native-stack';
+import { Swipeable } from 'react-native-gesture-handler';
 import { useNavigation } from '@react-navigation/native';
-import { RootStackParamList } from '../../../App';
 import { useAlarmContext } from '../../../context/AlarmContext';
+import styles from './HomeScreen.styles';
+import { RootStackParamList } from '../../../App';
+import { NativeStackNavigationProp } from '@react-navigation/native-stack';
 
 type HomeScreenNavigationProp = NativeStackNavigationProp<
   RootStackParamList,
@@ -19,73 +21,66 @@ type HomeScreenNavigationProp = NativeStackNavigationProp<
 
 export default function HomeScreen() {
   const navigation = useNavigation<HomeScreenNavigationProp>();
-  const { alarms } = useAlarmContext();
+  const { alarms, toggleAlarm, deleteAlarm } = useAlarmContext();
 
-  const renderItem = ({ item }: any) => {
-    const timeString = new Intl.DateTimeFormat('en-US', {
-      hour: 'numeric',
-      minute: 'numeric',
-      hour12: true,
-    }).format(new Date(item.time));
-
+  const renderRightActions = (alarmId: string) => {
     return (
-      <TouchableOpacity style={styles.alarmCard}>
-        <Text style={styles.alarmName}>{item.barcode.name}</Text>
-        <Text style={styles.alarmTime}>{timeString}</Text>
+      <TouchableOpacity
+        style={styles.deleteButton}
+        onPress={() => deleteAlarm(alarmId)}
+      >
+        <Text style={styles.deleteButtonText}>Delete</Text>
       </TouchableOpacity>
     );
   };
 
   return (
     <View style={styles.container}>
-      <Text style={styles.heading}>Your Alarms</Text>
+      <View style={styles.headerRow}>
+        <Text style={styles.heading}>Your Alarms</Text>
+        <TouchableOpacity onPress={() => navigation.navigate('AlarmSetup')}>
+          <Text style={styles.plusButton}>＋</Text>
+        </TouchableOpacity>
+      </View>
 
       {alarms.length === 0 ? (
-        <Text style={styles.noAlarms}>No alarms yet. Tap below to create one.</Text>
+        <Text style={styles.noAlarms}>
+          No alarms yet. Tap the + icon to create one.
+        </Text>
       ) : (
-        <FlatList
-          data={alarms}
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
-        />
-      )}
+        <View style={styles.alarmListContainer}>
+          <ScrollView>
+            {alarms.map((item) => {
+  const timeString = new Intl.DateTimeFormat('en-US', {
+    hour: 'numeric',
+    minute: 'numeric',
+    hour12: true,
+  }).format(new Date(item.time));
 
-      <Button
-        title="Create New Alarm"
-        onPress={() => navigation.navigate('AlarmSetup')}
-      />
+  return (
+    <Swipeable
+      key={item.id}
+      renderRightActions={() => renderRightActions(item.id)}
+      overshootRight={false}
+    >
+      <View style={styles.alarmCardRow}>
+        <View style={styles.alarmCardContent}>
+          <Text style={styles.alarmName}>{item.barcode.name}</Text>
+          <Text style={styles.alarmTime}>{timeString}</Text>
+        </View>
+        <View style={styles.toggleWrapper}>
+          <Switch
+            value={item.enabled}
+            onValueChange={() => toggleAlarm(item.id)}
+          />
+        </View>
+      </View>
+    </Swipeable>
+              );
+            })}
+          </ScrollView>
+        </View>
+      )}
     </View>
   );
 }
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    paddingTop: 60,
-    paddingHorizontal: 20,
-  },
-  heading: {
-    fontSize: 24,
-    fontWeight: 'bold',
-    marginBottom: 20,
-  },
-  noAlarms: {
-    fontSize: 16,
-    color: '#888',
-    marginBottom: 20,
-  },
-  alarmCard: {
-    backgroundColor: '#f1f1f1',
-    padding: 16,
-    marginBottom: 12,
-    borderRadius: 8,
-  },
-  alarmName: {
-    fontSize: 18,
-    fontWeight: '600',
-  },
-  alarmTime: {
-    fontSize: 16,
-    color: '#555',
-  },
-});

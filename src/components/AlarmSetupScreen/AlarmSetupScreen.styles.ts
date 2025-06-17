@@ -14,12 +14,25 @@ export default StyleSheet.create({
     marginTop: 16,
   },
   label: {
-    fontSize: 18,
+   fontSize: 16,
     fontWeight: '500',
+    marginTop: 16,
     marginBottom: 8,
   },
   timePicker: {
-    marginBottom: 24,
+    marginBottom: 20,
+  },
+    dropdownContainer: {
+    maxHeight: 150,
+    backgroundColor: '#fff',
+    borderWidth: 1,
+    borderColor: '#ccc',
+    borderRadius: 8,
+    marginTop: 8,
+    marginBottom: 20,
+  },
+    dropdownScroll: {
+    paddingHorizontal: 4,
   },
   button: {
     backgroundColor: '#007bff',
@@ -31,10 +44,12 @@ export default StyleSheet.create({
     backgroundColor: '#0056b3',
   },
   dropdownItem: {
-    backgroundColor: '#6c757d',
     padding: 12,
-    borderRadius: 8,
-    marginBottom: 6,
+    borderBottomWidth: 1,
+    borderBottomColor: '#eee',
+  },
+    dropdownItemText: {
+    fontSize: 16,
   },
   buttonText: {
     color: '#fff',
@@ -53,4 +68,5 @@ export default StyleSheet.create({
     textAlign: 'center',
     fontWeight: '600',
   },
+  
 });
